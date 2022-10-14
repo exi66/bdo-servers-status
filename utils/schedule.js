@@ -11,10 +11,10 @@ exports.initScheduledJobs = (client) => {
   const maintenanceStop = CronJob.schedule("0 13 * * 3", () => {
     client.maintenance = false;
   });
-  const secondaryJob = CronJob.schedule("*/20 * * * *", () => {
+  const secondaryJob = CronJob.schedule("* * * * *", () => {
     let localDate = new Date();
     let jsonPath = path.join(__dirname, '..', 'public', 'chart', localDate.getFullYear().toString(), localDate.getMonth().toString() + 1, `${localDate.getDate()}.json`);
-    let imgPath = path.join(__dirname, '..', 'public', 'img', `today.png`);
+    let imgPath = path.join(__dirname, '..', 'public', 'img', 'today.png');
     ChartToImage(jsonPath, imgPath);
   });
   const imagesJob = CronJob.schedule("5 0 * * *", () => {
