@@ -11,19 +11,19 @@ exports.initScheduledJobs = (client) => {
   const maintenanceStop = CronJob.schedule("0 13 * * 3", () => {
     client.maintenance = false;
   });
-  const secondaryJob = CronJob.schedule("* * * * *", () => {
+  const secondaryJob = CronJob.schedule("*/20 * * * *", () => {
     let localDate = new Date();
-    let jsonPath = path.join(__dirname, '..', 'public', 'chart', localDate.getFullYear().toString(), localDate.getMonth().toString() + 1, `${localDate.getDate()}.json`);
+    let jsonPath = path.join(__dirname, '..', 'public', 'chart', localDate.getFullYear().toString(), (localDate.getMonth() + 1).toString(), `${localDate.getDate()}.json`);
     let imgPath = path.join(__dirname, '..', 'public', 'img', 'today.png');
     ChartToImage(jsonPath, imgPath);
   });
   const imagesJob = CronJob.schedule("5 0 * * *", () => {
     let localDate = getPreviousDay();
-    let dayJsonPath = path.join(__dirname, '..', 'public', 'chart', localDate.getFullYear().toString(), localDate.getMonth().toString() + 1, `${localDate.getDate()}.json`);
-    let dayImgPath = path.join(__dirname, '..', 'public', 'img', localDate.getFullYear().toString(), localDate.getMonth().toString() + 1, `${localDate.getDate()}.png`);
+    let dayJsonPath = path.join(__dirname, '..', 'public', 'chart', localDate.getFullYear().toString(), (localDate.getMonth() + 1).toString(), `${localDate.getDate()}.json`);
+    let dayImgPath = path.join(__dirname, '..', 'public', 'img', localDate.getFullYear().toString(), (localDate.getMonth() + 1).toString(), `${localDate.getDate()}.png`);
     ChartToImage(dayJsonPath, dayImgPath);
-    let monthJsonPath = path.join(__dirname, '..', 'public', 'chart', localDate.getFullYear().toString(), localDate.getMonth().toString() + 1, `index.json`);
-    let monthImgPath = path.join(__dirname, '..', 'public', 'img', localDate.getFullYear().toString(), localDate.getMonth().toString() + 1, `index.png`);
+    let monthJsonPath = path.join(__dirname, '..', 'public', 'chart', localDate.getFullYear().toString(), (localDate.getMonth() + 1).toString(), `index.json`);
+    let monthImgPath = path.join(__dirname, '..', 'public', 'img', localDate.getFullYear().toString(), (localDate.getMonth() + 1).toString(), `index.png`);
     ChartToImage(monthJsonPath, monthImgPath, false);
   });
   const generalJob = CronJob.schedule("1 0 * * *", () => {
