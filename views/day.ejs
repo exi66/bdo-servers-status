@@ -1,0 +1,45 @@
+<% layout('layouts/app') -%>
+<% script('https://code.jquery.com/jquery-3.6.0.min.js') -%>
+<% script('https://cdn.jsdelivr.net/npm/chart.js') -%>
+<% script('https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns/dist/chartjs-adapter-date-fns.bundle.min.js') -%>
+<% script('/js/main.js') -%>
+
+<main class="container mt-3">
+  <div class="row">
+    <div class="col-12 mb-3">
+      <div class="row">
+        <div class="col-auto">
+          <a class="btn btn-outline-light mx-1" href="/" role="button">На главную</a>
+        </div>
+        <div class="col-auto ms-auto">
+          <select class="form-select form-select bg-dark text-white" id="select_data">
+            <option value="auth" selected>Авторизация</option>
+            <option value="market">Аукцион</option>
+            <option value="k1">Кальфеон-1</option>
+            <option value="v1">Валенсия-1</option>
+            <option value="m1">Медия-1</option>
+            <option value="kam1">Камасильвия-1</option>
+          </select>
+        </div>
+        <div class="col-12">
+          <canvas id="chart"></canvas>
+        </div>
+      </div>
+    </div>
+  </div>
+</main>
+<script>
+  document.addEventListener('DOMContentLoaded', function (event) {
+    let localPath = window.location.pathname.toString().split('/');
+    var path = `/chart/${localPath[2]}/${localPath[3]}/${localPath[4]}.json`;
+    var chart = createDayChart('chart');
+    updateChart(path, $('#select_data').find(':selected').val(), chart);
+
+    $('#select_data').on('change', function (e) {
+      updateChart(path, this.value, chart);
+    });
+  });
+</script>
+
+<% block('title', 'Статистика за день' ) -%>
+<% block('large_image', large_image) -%>
