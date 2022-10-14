@@ -2,7 +2,7 @@
 Down detector for Black Desert Online
 
 ## overview
-The default settings are for the RU region, but you can change them in `/data/servers.json`. To find out the IP of the servers, you need to open the resource monitor from Microsoft, go to the network tab and go to the tcp-connections, then find:  
+The default settings are for the RU region, but you can change them in `/storage/servers.json`. To find out the IP of the servers, you need to open the resource monitor from Microsoft, go to the network tab and go to the tcp-connections, then find:  
 - port 8889 - this will be the address of the game server 
 - port 8888 - authorization server. Can be found at the channel selection stage  
 - port 443  - central market 
