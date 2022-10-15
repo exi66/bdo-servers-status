@@ -24,26 +24,7 @@
   </div>
 </main>
 <script>
-  document.addEventListener('DOMContentLoaded', function (event) {
-    let localPath = window.location.pathname.toString().split('/');
-    var path = `/chart/${localPath[2]}/${localPath[3]}/index.json`;
-    var chart = createMonthChart('chart');
-    chart.canvas.onclick = function (evt) {
-      var points = chart.getElementsAtEventForMode(evt, 'nearest', { intersect: true }, true);
-      if (points[0]) {
-        const dataset = points[0].datasetIndex;
-        const index = points[0].index;
-        const value = chart.data.datasets[dataset].data[index];
-        if (confirm(`Вы хотите посмотреть подробную статистику от ${value.x.toLocaleDateString('ru-RU')}?`))
-          window.location.href = `/stats/${value.x.getFullYear()}/${value.x.getMonth() + 1}/${value.x.getDate()}`;
-      }
-    };
-    updateChart(path, $('#select_data').find(':selected').val(), chart);
-
-    $('#select_data').on('change', function (e) {
-      updateChart(path, this.value, chart);
-    });
-  });
+document.addEventListener("DOMContentLoaded",(function(t){let e=window.location.pathname.toString().split("/");var a=`/chart/${e[2]}/${e[3]}/index.json`,n=createMonthChart("chart");n.canvas.onclick=function(t){var e=n.getElementsAtEventForMode(t,"nearest",{intersect:!0},!0);if(e[0]){const t=e[0].datasetIndex,a=e[0].index,o=n.data.datasets[t].data[a];confirm(`Вы хотите посмотреть подробную статистику от ${o.x.toLocaleDateString("ru-RU")}?`)&&(window.location.href=`/stats/${o.x.getFullYear()}/${o.x.getMonth()+1}/${o.x.getDate()}`)}},updateChart(a,$("#select_data").find(":selected").val(),n),$("#select_data").on("change",(function(t){updateChart(a,this.value,n)}))}));
 </script>
 <%- contentFor('og-title') %>
 Статистика за месяц
@@ -55,4 +36,4 @@
 <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns/dist/chartjs-adapter-date-fns.bundle.min.js"></script>
-<script src="/js/main.js"></script>
+<script src="/js/main.min.js"></script>

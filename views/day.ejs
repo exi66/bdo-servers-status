@@ -24,16 +24,7 @@
   </div>
 </main>
 <script>
-  document.addEventListener('DOMContentLoaded', function (event) {
-    let localPath = window.location.pathname.toString().split('/');
-    var path = `/chart/${localPath[2]}/${localPath[3]}/${localPath[4]}.json`;
-    var chart = createDayChart('chart');
-    updateChart(path, $('#select_data').find(':selected').val(), chart);
-
-    $('#select_data').on('change', function (e) {
-      updateChart(path, this.value, chart);
-    });
-  });
+document.addEventListener("DOMContentLoaded",(function(t){let a=window.location.pathname.toString().split("/");var e=`/chart/${a[2]}/${a[3]}/${a[4]}.json`,n=createDayChart("chart");updateChart(e,$("#select_data").find(":selected").val(),n),$("#select_data").on("change",(function(t){updateChart(e,this.value,n)}))}));
 </script>
 <%- contentFor('og-title') %>
 Статистика за день
@@ -45,4 +36,4 @@
 <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns/dist/chartjs-adapter-date-fns.bundle.min.js"></script>
-<script src="/js/main.js"></script>
+<script src="/js/main.min.js"></script>

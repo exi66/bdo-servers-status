@@ -39,14 +39,17 @@ const updateChart = function updateChart(url, data, chart) {
   }
 }
 const getData = function getData(url) {
-  var res = $.ajax({
-    type: 'GET',
-    url: url,
-    async: false,
-    cache: false,
-  });
-  if (res.status === 200) return JSON.parse(res.responseText);
-  return { error: res.status };
+  try {
+    var res = $.ajax({
+      type: 'GET',
+      url: url,
+      async: false,
+      cache: false,
+    });
+    return JSON.parse(res.responseText);
+  } catch (e) {
+    return { error: e.message };
+  }
 }
 const createMonthChart = function createMonthChart(id) {
   var chart = new Chart(document.getElementById(id), {
