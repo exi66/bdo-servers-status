@@ -26,12 +26,20 @@
 <script>
 document.addEventListener("DOMContentLoaded",(function(t){let e=window.location.pathname.toString().split("/");var a=`/chart/${e[2]}/${e[3]}/index.json`,n=createMonthChart("chart");n.canvas.onclick=function(t){var e=n.getElementsAtEventForMode(t,"nearest",{intersect:!0},!0);if(e[0]){const t=e[0].datasetIndex,a=e[0].index,o=n.data.datasets[t].data[a];confirm(`Вы хотите посмотреть подробную статистику от ${o.x.toLocaleDateString("ru-RU")}?`)&&(window.location.href=`/stats/${o.x.getFullYear()}/${o.x.getMonth()+1}/${o.x.getDate()}`)}},updateChart(a,$("#select_data").find(":selected").val(),n),$("#select_data").on("change",(function(t){updateChart(a,this.value,n)}))}));
 </script>
-<%- contentFor('og-title') %>
-Статистика за месяц
+<%- contentFor('meta') %>
+<meta property="og:title" content="Статистика за месяц">
+<meta property="og:description" content="Сервис по отслеживанию доступности серверов BDO RU. Подробная статистика за день/месяц.">
+<meta property="og:type" content="website">
+
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image:src" content="<%- large_image+'?_='+new Date().getTime() -%>">
+
+<meta property="og:image" content="/favicon.png">
+<meta property="og:image:type" content="image/png">
+<meta property="og:image:width" content="128">
+<meta property="og:image:height" content="128">
 <%- contentFor('title') %>
 Статистика за месяц
-<%- contentFor('large_image') %>
-<%- large_image -%>
 <%- contentFor('script') %>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>

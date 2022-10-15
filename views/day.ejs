@@ -26,12 +26,20 @@
 <script>
 document.addEventListener("DOMContentLoaded",(function(t){let a=window.location.pathname.toString().split("/");var e=`/chart/${a[2]}/${a[3]}/${a[4]}.json`,n=createDayChart("chart");updateChart(e,$("#select_data").find(":selected").val(),n),$("#select_data").on("change",(function(t){updateChart(e,this.value,n)}))}));
 </script>
-<%- contentFor('og-title') %>
-Статистика за день
+<%- contentFor('meta') %>
+<meta property="og:title" content="Статистика за день">
+<meta property="og:description" content="Сервис по отслеживанию доступности серверов BDO RU. Подробная статистика за день/месяц.">
+<meta property="og:type" content="website">
+
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image:src" content="<%- large_image+'?_='+new Date().getTime() -%>">
+
+<meta property="og:image" content="/favicon.png">
+<meta property="og:image:type" content="image/png">
+<meta property="og:image:width" content="128">
+<meta property="og:image:height" content="128">
 <%- contentFor('title') %>
 Статистика за день
-<%- contentFor('large_image') %>
-<%- large_image -%>
 <%- contentFor('script') %>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
