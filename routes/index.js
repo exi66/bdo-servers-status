@@ -40,10 +40,13 @@ router.get('/stats/:year/:month/:day', function (req, res, next) {
   let year = req.params.year;
   let month = req.params.month;
   let day = req.params.day;
+  let today = (new Date().getFullYear == year && 
+    (new Date().getMonth() + 1) == month && 
+    new Date().getDate() == day);
   let localPath = path.join(chartPath, year, month, day + '.json');
   if (fs.existsSync(localPath))
     return res.render('day', {
-      large_image: `/img/${year}/${month}/${day}.png`
+      large_image: today ? 'img/today.png' : `/img/${year}/${month}/${day}.png`
     });
 
   let err = new Error('Not found');
