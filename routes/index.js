@@ -20,24 +20,35 @@ router.get('/month', function (req, res, next) {
   return res.redirect(`/stats/${now.getFullYear()}/${now.getMonth() + 1}`);
 });
 
-router.get('/stats/:year/:month/:day?', function (req, res, next) {
+router.get('/stats/:year/:month', function (req, res, next) {
   const chartPath = path.join(__dirname, '..', 'public', 'chart');
-
   let year = req.params.year;
   let month = req.params.month;
-  let day = req.params.day;
-
-  let localPath = day ? path.join(chartPath, year, month, day + '.json') : path.join(chartPath, year, month, 'index.json');
-
+  let localPath = path.join(chartPath, year, month, 'index.json');
   if (fs.existsSync(localPath))
-    return res.render(day ? 'day' : 'month', {
-      large_image: day ? `/img/${year}/${month}/${day}.png` : `/img/${year}/${month}/index.png`
+    return res.render('month', {
+      large_image: `/img/${year}/${month}/index.png`
     });
 
   let err = new Error('Not found');
   err.status = 404;
   return next(err);
+});
 
+router.get('/stats/:year/:month/:day', function (req, res, next) {
+  const chartPath = path.join(__dirname, '..', 'public', 'chart');
+  let year = req.params.year;
+  let month = req.params.month;
+  let day = req.params.day;
+  let localPath = path.join(chartPath, year, month, day + '.json');
+  if (fs.existsSync(localPath))
+    return res.render('day', {
+      large_image: `/img/${year}/${month}/${day}.png`
+    });
+
+  let err = new Error('Not found');
+  err.status = 404;
+  return next(err);
 });
 
 module.exports = router;
