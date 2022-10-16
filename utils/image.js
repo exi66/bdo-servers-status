@@ -6,6 +6,7 @@ const { Canvas, Image } = require('canvas');
 
 const width = 600;
 const height = 300;
+const margin = 20;
 const backgroundColour = '#212529';
 const chartJSNodeCanvas = new ChartJSNodeCanvas({
   width, height, backgroundColour, plugins: {
@@ -28,20 +29,24 @@ const render = async function render(jsonPath, imgPath, day = true) {
     { data: json.map(e => ({ x: new Date(e.time), y: e.maintenance ? null : e.m1 == -1 ? -10 : e.m1 })), label: 'Медия-1' },
     { data: json.map(e => ({ x: new Date(e.time), y: e.maintenance ? null : e.kam1 == -1 ? -10 : e.kam1 })), label: 'Камасильвия-1' },
   ];
-  var images = [], y_offset = 0;
-  for (let __data of chartData) {
-    const configuration = day ? day_config(__data.data, __data.label) : month_config(__data.data, __data.label);
+  var images = [];
+  for (let i = 0, y_offset = 0, x_offset = 0; i < chartData.length; i++) {
+
+    if (i % 2 == 0 && i !== 0) x_offset += width+margin;
+    if (i % 2 == 1) y_offset = height+margin;
+    else y_offset = 0;
+
+    const configuration = day ? day_config(chartData[i].data, chartData[i].label) : month_config(chartData[i].data, chartData[i].label);
     const buffer = await chartJSNodeCanvas.renderToBuffer(configuration);
     const base64 = buffer.toString('base64');
-    const image = { src: 'data:image/png;base64,'+base64, x: 0, y: y_offset }
+    const image = { src: 'data:image/png;base64,'+base64, x: x_offset, y: y_offset }
     images.push(image);
-    y_offset += height;
   }
   mergeImages(images, {
     Canvas: Canvas,
     Image: Image,
-    width: width,
-    height: height*images.length
+    width: width*3+margin*2,
+    height: height*2+margin
   }).then(b64 => {
     const buffer = Buffer.from(b64.replace('data:image/png;base64,', ''), 'base64');
     fs.ensureFileSync(imgPath);
