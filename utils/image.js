@@ -1,9 +1,11 @@
 const { ChartJSNodeCanvas } = require('chartjs-node-canvas');
 const fs = require('fs-extra');
 const path = require('path');
+const mergeImages = require('merge-images');
+const { Canvas, Image } = require('canvas');
 
-const width = 800;
-const height = 400;
+const width = 600;
+const height = 300;
 const backgroundColour = '#212529';
 const chartJSNodeCanvas = new ChartJSNodeCanvas({
   width, height, backgroundColour, plugins: {
@@ -14,19 +16,38 @@ const chartJSNodeCanvas = new ChartJSNodeCanvas({
 });
 chartJSNodeCanvas.registerFont(path.join(__dirname, '..', 'public', 'fonts', 'arial.ttf'), { family: 'Arial' });
 
-const render = async function render(jsonPath, img, day = true, type = 'auth', label = 'Авторизация') {
+const render = async function render(jsonPath, imgPath, day = true) {
   if (!fs.existsSync(jsonPath)) return console.log(`[${new Date().toLocaleString()}] file ${jsonPath} not exists. Try another.`);
-
   var file = fs.readFileSync(jsonPath);
   var json = JSON.parse(file).filter(e => e);
-  var chartData = json.map(e => ({ x: new Date(e.time), y: e.maintenance ? null : e[type] == -1 ? -10 : e[type] }));
-
-  const configuration = day ? day_config(chartData, label) : month_config(chartData, label);
-  const image = await chartJSNodeCanvas.renderToBuffer(configuration);
-  const buf = Buffer.from(image, 'base64');
-  fs.ensureFileSync(img);
-  fs.writeFileSync(img, buf);
-  console.log(`[${new Date().toLocaleString()}] ${img} updated by file ${jsonPath}.`);
+  var chartData = [
+    { data: json.map(e => ({ x: new Date(e.time), y: e.maintenance ? null : e.auth == -1 ? -10 : e.auth })), label: 'Авторизация' },
+    { data: json.map(e => ({ x: new Date(e.time), y: e.maintenance ? null : e.market == -1 ? -10 : e.market })), label: 'Аукцион' },
+    { data: json.map(e => ({ x: new Date(e.time), y: e.maintenance ? null : e.k1 == -1 ? -10 : e.k1 })), label: 'Кальфеон-1' },
+    { data: json.map(e => ({ x: new Date(e.time), y: e.maintenance ? null : e.v1 == -1 ? -10 : e.v1 })), label: 'Валенсия-1' },
+    { data: json.map(e => ({ x: new Date(e.time), y: e.maintenance ? null : e.m1 == -1 ? -10 : e.m1 })), label: 'Медия-1' },
+    { data: json.map(e => ({ x: new Date(e.time), y: e.maintenance ? null : e.kam1 == -1 ? -10 : e.kam1 })), label: 'Камасильвия-1' },
+  ];
+  var images = [], y_offset = 0;
+  for (let __data of chartData) {
+    const configuration = day ? day_config(__data.data, __data.label) : month_config(__data.chartData, __data.label);
+    const buffer = await chartJSNodeCanvas.renderToBuffer(configuration);
+    const base64 = buffer.toString('base64');
+    const image = { src: 'data:image/png;base64,'+base64, x: 0, y: y_offset }
+    images.push(image);
+    y_offset += height;
+  }
+  mergeImages(images, {
+    Canvas: Canvas,
+    Image: Image,
+    width: width,
+    height: height*images.length
+  }).then(b64 => {
+    const buffer = Buffer.from(b64.replace('data:image/png;base64,', ''), 'base64');
+    fs.ensureFileSync(imgPath);
+    fs.writeFileSync(imgPath, buffer);
+    console.log(`[${new Date().toLocaleString()}] ${imgPath} updated by file ${jsonPath}.`);
+  });
 };
 
 const day_config = (chartData, label) => {
