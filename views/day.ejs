@@ -3,11 +3,31 @@
   <div class="row">
     <div class="col-12 mb-3">
       <div class="row">
-        <div class="col-auto">
-          <a class="btn btn-outline-light mx-1" href="/" role="button">На главную</a>
+        <div class="col-12 col-lg-auto my-1">
+          <div class="row">
+            <div class="col-auto">
+              <a class="btn btn-outline-light" href="/" role="button"><span class="d-none d-md-inline">Главная </span><i class="bi bi-house"></i></a>
+            </div>
+            <div class="col-auto ms-auto ms-lg-0">
+              <a class="btn btn-outline-light" href="./" role="button">Этот месяц</a>
+            </div>
+          </div>
         </div>
-        <div class="col-auto ms-auto">
-          <select class="form-select form-select bg-dark text-white" id="select_data">
+        <div class="col-12 col-lg-auto my-1">
+          <div class="row">
+            <div class="col-6">
+              <div class="btn-group" role="group">
+                <input id="pick_date" class="btn btn-outline-light" type="date">
+                <button id="navigate_to_date" type="button" class="btn btn-outline-light"><i class="bi bi-caret-right-fill"></i></button>
+              </div>
+            </div>
+            <div class="col-auto ms-auto">
+              <a class="btn btn-outline-light" href="<%-large_image-%>" role="button"><span class="d-none d-md-inline">Изображение </span><i class="bi bi-image"></i></a>
+            </div>
+          </div>
+        </div>
+        <div class="col-12 col-lg-auto mx-auto mx-lg-0 ms-lg-auto my-1">  
+          <select class="form-select bg-dark text-white" id="select_data">
             <option value="auth" selected>Авторизация</option>
             <option value="market">Аукцион</option>
             <option value="k1">Кальфеон-1</option>
@@ -24,7 +44,7 @@
   </div>
 </main>
 <script>
-document.addEventListener("DOMContentLoaded",(function(t){let a=window.location.pathname.toString().split("/");var e=`/chart/${a[2]}/${a[3]}/${a[4]}.json`,n=createDayChart("chart");updateChart(e,$("#select_data").find(":selected").val(),n),$("#select_data").on("change",(function(t){updateChart(e,this.value,n)}))}));
+document.addEventListener("DOMContentLoaded",(function(t){var e=getData("/api/stats");if(e.error)return console.error(e.error);e.sort((function(t,e){let a=new Date(t).getTime(),n=new Date(e).getTime();return a<n?-1:a>n?1:0}));let a=window.location.pathname.toString().split("/");var n=`/chart/${a[2]}/${a[3]}/${a[4]}.json`,r=`${a[2]}-${("0"+a[3]).slice(-2)}-${("0"+a[4]).slice(-2)}`,i=createDayChart("chart");$("#pick_date").attr("min",e[0]),$("#pick_date").attr("max",e.slice(-1)),$("#pick_date").attr("value",r),updateChart(n,$("#select_data").find(":selected").val(),i),$("#navigate_to_date").click((function(){let t=$("#pick_date").val();if(t){let e=new Date(t);confirm(`Вы хотите посмотреть подробную статистику от ${e.toLocaleDateString("ru-RU")}?`)&&(window.location.href=`/stats/${e.getFullYear()}/${e.getMonth()+1}/${e.getDate()}`)}})),$("#select_data").on("change",(function(){updateChart(n,this.value,i)}))}));
 </script>
 <%- contentFor('meta') %>
 <meta property="og:title" content="Статистика за день">
@@ -40,6 +60,8 @@ document.addEventListener("DOMContentLoaded",(function(t){let a=window.location.
 <meta property="og:image:height" content="128">
 <%- contentFor('title') %>
 Статистика за день
+<%- contentFor('style') %>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.9.1/font/bootstrap-icons.css">
 <%- contentFor('script') %>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>

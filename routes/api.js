@@ -18,33 +18,17 @@ router.get('/news', function (req, res, next) {
 
 router.get('/stats', function (req, res, next) {
   let directory = path.join(__dirname, '..', 'public', 'chart');
-  let __tree = [];
+  let dates = [];
   fs.readdirSync(directory).filter(file => !(file === '.gitignore')).forEach(year => {
-    let __year = {
-      text: year,
-      nodes: []
-    }
     fs.readdirSync(path.join(directory, year)).forEach(month => {
       const days = fs.readdirSync(path.join(directory, year, month))
         .filter(file => file.endsWith('.json') && file !== 'index.json');
-      let __month = {
-        text: month,
-        href: `/stats/${year}/${month}/`,
-        nodes: []
-      }
       for (let day of days) {
-        let __day = {
-          text: day.replace('.json', ''),
-          href: `/stats/${year}/${month}/${day.replace('.json', '')}`,
-          nodes: []
-        }
-        __month.nodes.push(__day);
+        dates.push(`${year}-${('0' + month).slice(-2)}-${('0' + day.replace('.json', '')).slice(-2)}`);
       }
-      __year.nodes.push(__month);
     });
-    __tree.push(__year);
   });
-  return res.json(__tree);
+  return res.json(dates);
 });
 
 module.exports = router;

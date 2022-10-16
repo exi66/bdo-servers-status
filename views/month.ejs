@@ -3,11 +3,28 @@
   <div class="row">
     <div class="col-12 mb-3">
       <div class="row">
-        <div class="col-auto">
-          <a class="btn btn-outline-light mx-1" href="/" role="button">На главную</a>
+        <div class="col-12 col-lg-auto my-1">
+          <div class="row">
+            <div class="col-12">
+              <a class="btn btn-outline-light d-grid" href="/" role="button"><span class="d-inline">Главная <i class="bi bi-house"></i></span></a>
+            </div>
+          </div>
         </div>
-        <div class="col-auto ms-auto">
-          <select class="form-select form-select bg-dark text-white" id="select_data">
+        <div class="col-12 col-lg-auto my-1">
+          <div class="row">
+            <div class="col-6">
+              <div class="btn-group" role="group">
+                <input id="pick_date" class="btn btn-outline-light" type="month">
+                <button id="navigate_to_date" type="button" class="btn btn-outline-light"><i class="bi bi-caret-right-fill"></i></button>
+              </div>
+            </div>
+            <div class="col-auto ms-auto">
+              <a class="btn btn-outline-light" href="<%-large_image-%>" role="button"><span class="d-none d-md-inline">Изображение </span><i class="bi bi-image"></i></a>
+            </div>
+          </div>
+        </div>
+        <div class="col-12 col-lg-auto mx-auto mx-lg-0 ms-lg-auto my-1">  
+          <select class="form-select bg-dark text-white" id="select_data">
             <option value="auth" selected>Авторизация</option>
             <option value="market">Аукцион</option>
             <option value="k1">Кальфеон-1</option>
@@ -24,7 +41,7 @@
   </div>
 </main>
 <script>
-document.addEventListener("DOMContentLoaded",(function(t){let e=window.location.pathname.toString().split("/");var a=`/chart/${e[2]}/${e[3]}/index.json`,n=createMonthChart("chart");n.canvas.onclick=function(t){var e=n.getElementsAtEventForMode(t,"nearest",{intersect:!0},!0);if(e[0]){const t=e[0].datasetIndex,a=e[0].index,o=n.data.datasets[t].data[a];confirm(`Вы хотите посмотреть подробную статистику от ${o.x.toLocaleDateString("ru-RU")}?`)&&(window.location.href=`/stats/${o.x.getFullYear()}/${o.x.getMonth()+1}/${o.x.getDate()}`)}},updateChart(a,$("#select_data").find(":selected").val(),n),$("#select_data").on("change",(function(t){updateChart(a,this.value,n)}))}));
+document.addEventListener("DOMContentLoaded",(function(t){var e=getData("/api/stats");if(e.error)return console.error(e.error);e.sort((function(t,e){let a=new Date(t).getTime(),n=new Date(e).getTime();return a<n?-1:a>n?1:0}));let a=window.location.pathname.toString().split("/");var n=`/chart/${a[2]}/${a[3]}/index.json`,i=`${a[2]}-${("0"+a[3]).slice(-2)}`,r=createMonthChart("chart");let o=e[0].split("-"),c=e.slice(-1).toString().split("-");$("#pick_date").attr("min",`${o[0]}-${o[1]}`),$("#pick_date").attr("max",`${c[0]}-${c[1]}`),$("#pick_date").attr("value",i),$("#navigate_to_date").click((function(){let t=$("#pick_date").val();if(t){let e=new Date(t+"-01");confirm(`Вы хотите посмотреть подробную статистику за ${t.split("-")[1]} месяц ${t.split("-")[0]} года?`)&&(window.location.href=`/stats/${e.getFullYear()}/${e.getMonth()+1}`)}})),r.canvas.onclick=function(t){var e=r.getElementsAtEventForMode(t,"nearest",{intersect:!0},!0);if(e[0]){const t=e[0].datasetIndex,a=e[0].index,n=r.data.datasets[t].data[a];confirm(`Вы хотите посмотреть подробную статистику от ${n.x.toLocaleDateString("ru-RU")}?`)&&(window.location.href=`/stats/${n.x.getFullYear()}/${n.x.getMonth()+1}/${n.x.getDate()}`)}},updateChart(n,$("#select_data").find(":selected").val(),r),$("#select_data").on("change",(function(t){updateChart(n,this.value,r)}))}));
 </script>
 <%- contentFor('meta') %>
 <meta property="og:title" content="Статистика за месяц">
@@ -40,6 +57,8 @@ document.addEventListener("DOMContentLoaded",(function(t){let e=window.location.
 <meta property="og:image:height" content="128">
 <%- contentFor('title') %>
 Статистика за месяц
+<%- contentFor('style') %>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.9.1/font/bootstrap-icons.css">
 <%- contentFor('script') %>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
