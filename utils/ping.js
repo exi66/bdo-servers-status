@@ -58,6 +58,7 @@ module.exports = (client) => {
 }
 
 async function start(client) {
+  var start_timer = new Date();
   timeout = default_timeout;
   if (client.maintenance) {
     let maintenanceStatus = { time: new Date().getTime(), maintenance: true };
@@ -73,7 +74,8 @@ async function start(client) {
 
     if (client.someDown) timeout = down_detect_timeout;
   }
-  return setTimeout(start, client.debug ? timeout / 30 : timeout, client);
+  var run_timer = new Date().getTime() - start_timer.getTime();
+  return setTimeout(start, client.debug ? (timeout - run_timer) / 30 : (timeout - run_timer), client);
 }
 
 function saveData(data) {
