@@ -4,9 +4,9 @@ const path = require('path');
 const mergeImages = require('merge-images');
 const { Canvas, Image } = require('canvas');
 
-const width = 600;
+const width = 640;
 const height = 300;
-const margin = 20;
+const margin = 0;
 const backgroundColour = '#212529';
 const chartJSNodeCanvas = new ChartJSNodeCanvas({
   width, height, backgroundColour, plugins: {
@@ -89,6 +89,12 @@ const day_config = (chartData, label) => {
       }],
     },
     options: {
+      layout: {
+        padding: {
+          left: 20,
+          right: 20,
+        }
+      },
       plugins: {
         legend: {
           labels: {
@@ -176,6 +182,12 @@ const month_config = (chartData, label) => {
       }],
     },
     options: {
+      layout: {
+        padding: {
+          left: 20,
+          right: 20,
+        }
+      },
       elements: {
         point: {
           radius: 0
