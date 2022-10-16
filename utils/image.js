@@ -30,7 +30,7 @@ const render = async function render(jsonPath, imgPath, day = true) {
   ];
   var images = [], y_offset = 0;
   for (let __data of chartData) {
-    const configuration = day ? day_config(__data.data, __data.label) : month_config(__data.chartData, __data.label);
+    const configuration = day ? day_config(__data.data, __data.label) : month_config(__data.data, __data.label);
     const buffer = await chartJSNodeCanvas.renderToBuffer(configuration);
     const base64 = buffer.toString('base64');
     const image = { src: 'data:image/png;base64,'+base64, x: 0, y: y_offset }
