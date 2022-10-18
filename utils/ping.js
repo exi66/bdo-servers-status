@@ -75,7 +75,7 @@ async function start(client) {
     if (client.someDown) timeout = down_detect_timeout;
   }
   var run_timer = new Date().getTime() - start_timer.getTime();
-  return setTimeout(start, client.debug ? (timeout - run_timer) / 30 : (timeout - run_timer), client);
+  return setTimeout(start, client.debug ? Math.max(0, (timeout - run_timer) / 30) : Math.max(0, (timeout - run_timer)), client);
 }
 
 function saveData(data) {
