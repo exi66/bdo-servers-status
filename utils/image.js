@@ -6,6 +6,7 @@ const { Canvas, Image, createCanvas } = require('canvas');
 
 const width = 640;
 const height = 300;
+const title_height = 50;
 const margin = 0;
 const backgroundColour = '#212529';
 const chartJSNodeCanvas = new ChartJSNodeCanvas({
@@ -19,7 +20,7 @@ chartJSNodeCanvas.registerFont(path.join(__dirname, '..', 'public', 'fonts', 'ar
 
 const render = async function render(jsonPath, imgPath, day = true) {
   if (!fs.existsSync(jsonPath)) return console.log(`[${new Date().toLocaleString()}] file ${jsonPath} not exists. Try another.`);
-  
+
   var file = fs.readFileSync(jsonPath);
   var json = JSON.parse(file).filter(e => e);
   var chartData = [
@@ -33,35 +34,35 @@ const render = async function render(jsonPath, imgPath, day = true) {
 
   var start_date = new Date(json[0].time).toLocaleDateString('ru-RU');
   var end_date = new Date(json[json.length - 1].time).toLocaleDateString('ru-RU');
-  const canvas = createCanvas(width*3+margin*2, 50);
+  const canvas = createCanvas(width * 3 + margin * 2, title_height);
   const context = canvas.getContext("2d");
   context.fillStyle = backgroundColour;
-  context.fillRect(0, 0, width*3+margin*2, 50);
+  context.fillRect(0, 0, width * 3 + margin * 2, title_height);
   context.font = "24pt 'Arial'";
   context.textAlign = "center";
   context.fillStyle = "rgba(255, 255, 255, 0.8)";
-  context.fillText(`Статистика за ${start_date} - ${end_date}`, (width*3+margin*2)/2, 40);
+  context.fillText(`Статистика за ${start_date} - ${end_date}`, (width * 3 + margin * 2) / 2, 40);
   const title_buffer = canvas.toBuffer("image/png");
 
   var images = [];
   images.push({ src: title_buffer, x: 0, y: 0 });
-  for (let i = 0, y_offset = 50, x_offset = 0; i < chartData.length; i++) {
+  for (let i = 0, y_offset = 0 + title_height, x_offset = 0; i < chartData.length; i++) {
 
-    if (i % 2 == 0 && i !== 0) x_offset += width+margin;
-    if (i % 2 == 1) y_offset = height+margin;
-    else y_offset = 50;
+    if (i % 2 == 0 && i !== 0) x_offset += width + margin;
+    if (i % 2 == 1) y_offset = height + margin + title_height;
+    else y_offset = 0 + title_height;
 
     const configuration = day ? day_config(chartData[i].data, chartData[i].label) : month_config(chartData[i].data, chartData[i].label);
     const buffer = await chartJSNodeCanvas.renderToBuffer(configuration);
     const base64 = buffer.toString('base64');
-    const image = { src: 'data:image/png;base64,'+base64, x: x_offset, y: y_offset }
+    const image = { src: 'data:image/png;base64,' + base64, x: x_offset, y: y_offset }
     images.push(image);
   }
   mergeImages(images, {
     Canvas: Canvas,
     Image: Image,
-    width: width*3+margin*2,
-    height: height*2+margin+50
+    width: width * 3 + margin * 2,
+    height: height * 2 + margin + 50
   }).then(b64 => {
     const buffer = Buffer.from(b64.replace('data:image/png;base64,', ''), 'base64');
     fs.ensureFileSync(imgPath);
