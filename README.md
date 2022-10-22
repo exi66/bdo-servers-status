@@ -14,6 +14,5 @@ Other game services can be found in the same way. Just take an action that requi
 - `npm start`
 
 ## How it works
-### Technical side
 The application sends an ICMP echo packet without any body, which means that this packet does not reach the game server directly, as it is not a game packet, i.e. actually displayed and collected statistics is the latency of the network gateway of the game servers.  
 After reading, there may be a suspicion that the application clogs (like DDoS) the channel of the game servers, but this is not so. Firstly, the application packets, as described above, do not cause any calculations on the game servers, and secondly, ping packets are sent every 5 minutes (every minute if any of the servers went down), which is very small, for comparison, pvp in some arena you send and receive about 30-60 packets every second that require calculation by the server.
