@@ -23,7 +23,12 @@ async function start(client) {
     try {
 
       var res = await axios.get('https://www.ru.playblackdesert.com/News/Notice?boardType=1',
-        { headers: { 'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/106.0.0.0 Safari/537.36' } }
+        { 
+          headers: { 
+            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/106.0.0.0 Safari/537.36',
+            Cookie: 'incap_ses_1288_2520441=M8jBEcIavmidCQkTwuXfEZNaVWMAAAAAdNmIsmqOzPh9T4CpLUDJng==' 
+          } 
+        }
       );
       var news = res.data.toString().match(/<ul\s+class="thumb_nail_list".*?>[\S\s]*?<\/ul>/gi)[0].match(/<li\.*?>[\S\s]*?<\/li>/gi);
 
