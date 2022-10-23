@@ -19,10 +19,12 @@ async function start(client) {
 
   var start_timer = new Date();
   if (!client.maintenance) {
-  
+
     try {
 
-      var res = await axios.get('https://www.ru.playblackdesert.com/News/Notice?boardType=1');
+      var res = await axios.get('https://www.ru.playblackdesert.com/News/Notice?boardType=1',
+        { headers: { 'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/106.0.0.0 Safari/537.36' } }
+      );
       var news = res.data.toString().match(/<ul\s+class="thumb_nail_list".*?>[\S\s]*?<\/ul>/gi)[0].match(/<li\.*?>[\S\s]*?<\/li>/gi);
 
       var local_news = news.map(e => ({
