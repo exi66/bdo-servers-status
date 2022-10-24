@@ -3,7 +3,7 @@ document.addEventListener('DOMContentLoaded', function (event) {
   var chart = createDayChart('chart');
   updChart(chart, $('#select_data').find(':selected').val());
   updateStatus();
-  updateNews();
+  //updateNews();
   $('#select_data').on('change', function () {
     updChart(chart, this.value);
   });
@@ -16,6 +16,9 @@ function updChart(chart, data) {
   let localDate = new Date();
   updateChart(`/chart/${localDate.getFullYear()}/${localDate.getMonth() + 1}/${localDate.getDate()}.json`, data, chart);
 }
+/* 
+* disable because now site require recaptcha
+*
 function updateNews() {
   var json = getData('/api/news');
   if (json.error) return console.error(json.error);
@@ -50,6 +53,7 @@ function updateNews() {
     );
   }
 }
+*/
 function updateStatus() {
   var indicators = [{ name: 'market', elem: $('#market_status')  }, { name: 'auth', elem: $('#auth_status') },
     { name: 'k1', elem: $('#k1_status')  }, { name: 'v1', elem: $('#v1_status') },
