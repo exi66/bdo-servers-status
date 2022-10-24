@@ -27,7 +27,7 @@ if (!app.locals.client.debug) console.log = function () { };
 //utils
 var downDetector = require(path.join(__dirname, 'utils', 'ping'))(app.locals.client);
 //disable because now site require recaptcha verify
-var newsScraper = require(path.join(__dirname, 'utils', 'news'))(app.locals.client);
+//var newsScraper = require(path.join(__dirname, 'utils', 'news'))(app.locals.client);
 
 var scheduledFunctions = require(path.join(__dirname, 'utils', 'schedule'));
 scheduledFunctions.initScheduledJobs(app.locals.client);
