@@ -1,6 +1,12 @@
 document.addEventListener('DOMContentLoaded', function(event) {
+  let localPath = window.location.pathname.toString().split('/');
+  var path = `/chart/${localPath[2]}/${localPath[3]}/index.json`;
+  var current_month = `${localPath[2]}-${('0' + localPath[3]).slice(-2)}`;
+  var chart = createMonthChart('chart');
+  var datasets = getDatasets(path, );
   var dates = getData('/api/stats');
-  if (dates.error) return console.error(dates.error);
+  var selected = $('#select_data').find(':selected').val();
+  if (!dates || !datasets) return;
   dates.sort(function(x, y) {
     let date1 = new Date(x).getTime();
     let date2 = new Date(y).getTime();
@@ -8,11 +14,6 @@ document.addEventListener('DOMContentLoaded', function(event) {
     if (date1 > date2) return 1;
     return 0;
   });
-  let localPath = window.location.pathname.toString().split('/');
-  var path = `/chart/${localPath[2]}/${localPath[3]}/index.json`;
-  var current_month = `${localPath[2]}-${('0' + localPath[3]).slice(-2)}`;
-  var chart = createMonthChart('chart');
-
   let min_date = dates[0].split('-');
   let max_date = dates.slice(-1).toString().split('-');
   $('#pick_date').attr('min', `${min_date[0]}-${min_date[1]}`);
@@ -37,8 +38,15 @@ document.addEventListener('DOMContentLoaded', function(event) {
         window.location.href = `/stats/${value.x.getFullYear()}/${value.x.getMonth() + 1}/${value.x.getDate()}`;
     }
   };
-  updateChart(path, $('#select_data').find(':selected').val(), chart);
+  updateChart();
   $('#select_data').on('change', function (e) {
-    updateChart(path, this.value, chart);
+    selected = this.value;
+    updateChart();
   });
+  function updateChart() {
+    if (!datasets || !chart) return;
+    let conf = datasets.find(e => e.name == selected);
+    if (!conf) return console.error('This type of datasets not allowed!');
+    return updateData(chart, conf);
+  }
 });

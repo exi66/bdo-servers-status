@@ -44,7 +44,7 @@
   </div>
 </main>
 <script>
-document.addEventListener("DOMContentLoaded",(function(t){var e=getData("/api/stats");if(e.error)return console.error(e.error);e.sort((function(t,e){let a=new Date(t).getTime(),n=new Date(e).getTime();return a<n?-1:a>n?1:0}));let a=window.location.pathname.toString().split("/");var n=`/chart/${a[2]}/${a[3]}/${a[4]}.json`,r=`${a[2]}-${("0"+a[3]).slice(-2)}-${("0"+a[4]).slice(-2)}`,i=createDayChart("chart");$("#pick_date").attr("min",e[0]),$("#pick_date").attr("max",e.slice(-1)),$("#pick_date").attr("value",r),updateChart(n,$("#select_data").find(":selected").val(),i),$("#navigate_to_date").click((function(){let t=$("#pick_date").val();if(t){let e=new Date(t);confirm(`Вы хотите посмотреть подробную статистику от ${e.toLocaleDateString("ru-RU")}?`)&&(window.location.href=`/stats/${e.getFullYear()}/${e.getMonth()+1}/${e.getDate()}`)}})),$("#select_data").on("change",(function(){updateChart(n,this.value,i)}))}));
+document.addEventListener("DOMContentLoaded",(function(t){let e=window.location.pathname.toString().split("/");var a=`/chart/${e[2]}/${e[3]}/${e[4]}.json`,n=`${e[2]}-${("0"+e[3]).slice(-2)}-${("0"+e[4]).slice(-2)}`,i=createDayChart("chart"),o=getDatasets(a),c=getData("/api/stats"),l=$("#select_data").find(":selected").val();function r(){if(!o||!i)return;let t=o.find((t=>t.name==l));return t?updateData(i,t):console.error("This type of datasets not allowed!")}c&&o&&(c.sort((function(t,e){let a=new Date(t).getTime(),n=new Date(e).getTime();return a<n?-1:a>n?1:0})),$("#pick_date").attr("min",c[0]),$("#pick_date").attr("max",c.slice(-1)),$("#pick_date").attr("value",n),r(),$("#navigate_to_date").click((function(){let t=$("#pick_date").val();if(t){let e=new Date(t);confirm(`Вы хотите посмотреть подробную статистику от ${e.toLocaleDateString("ru-RU")}?`)&&(window.location.href=`/stats/${e.getFullYear()}/${e.getMonth()+1}/${e.getDate()}`)}})),$("#select_data").on("change",(function(){l=this.value,r()})))}));
 </script>
 <%- contentFor('meta') %>
 <meta property="og:title" content="Статистика за день">
@@ -67,3 +67,4 @@ document.addEventListener("DOMContentLoaded",(function(t){var e=getData("/api/st
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns/dist/chartjs-adapter-date-fns.bundle.min.js"></script>
 <script src="/js/main.min.js"></script>
+<script src="/js/dayChart.min.js"></script>

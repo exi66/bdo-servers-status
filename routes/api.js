@@ -6,8 +6,10 @@ var router = express.Router();
 
 router.get('/status', function (req, res, next) {
   let client = req.app.locals.client;
-  if (client.maintenance) return res.json({ error: 'maintenance' });
-  return res.json(client.status);
+  if (!client.maintenance) return res.json(client.status);
+  let err = new Error('Maintenance');
+  err.status = 502;
+  return next(err);
 });
 
 /* 
@@ -15,8 +17,10 @@ router.get('/status', function (req, res, next) {
 *
 router.get('/news', function (req, res, next) {
   let client = req.app.locals.client;
-  if (client.maintenance) return res.json({ error: 'maintenance' });
-  return res.json(client.news);
+  if (!client.maintenance) return res.json(client.news);
+  let err = new Error('Maintenance');
+  err.status = 502;
+  return next(err);
 });
 */
 
