@@ -10,11 +10,15 @@ router.get('/status', function (req, res, next) {
   return res.json(client.status);
 });
 
+/* 
+* disable because now site require recaptcha
+*
 router.get('/news', function (req, res, next) {
   let client = req.app.locals.client;
   if (client.maintenance) return res.json({ error: 'maintenance' });
   return res.json(client.news);
 });
+*/
 
 router.get('/stats', function (req, res, next) {
   let directory = path.join(__dirname, '..', 'public', 'chart');
