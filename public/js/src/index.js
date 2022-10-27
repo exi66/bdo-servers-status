@@ -25,7 +25,9 @@ document.addEventListener('DOMContentLoaded', async function() {
     return updateData(chart, conf);
   }
   async function __getDatasets() {
-    let localDate = new Date();
+    let localDate = new Date(
+      new Date().toLocaleString('en-US', { timeZone: 'Europe/Moscow' })
+    );
     return await getDatasets(`/chart/${localDate.getFullYear()}/${localDate.getMonth() + 1}/${localDate.getDate()}`);
   }
   async function __getStatus() {
