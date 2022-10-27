@@ -38,7 +38,7 @@ document.addEventListener('DOMContentLoaded', async function() {
     return { status: status, time: json.time };
   }
   function updateStatus() {
-    if (!status) return;
+    if (!status.status && !status.time) return;
     document.getElementById('update_time').textContent = new Date(status.time).toLocaleString();
     for (let e of status.status) {
       let elem = document.getElementById(`${e.name}_status`);
