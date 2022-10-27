@@ -18,17 +18,14 @@ app.locals.client = {
   debug: process.env.NODE_ENV === 'development',
   maintenance: process.env.NODE_SHUTDOWN === 'maintenance',
   status: {},
+  servers: require(path.join(__dirname, 'storage', 'servers.json')),
   someDown: false,
-  news: []
 }
 
 if (!app.locals.client.debug) console.log = function () { };
 
 //utils
 var downDetector = require(path.join(__dirname, 'utils', 'ping'))(app.locals.client);
-//disable because now site require recaptcha verify
-//var newsScraper = require(path.join(__dirname, 'utils', 'news'))(app.locals.client);
-
 var scheduledFunctions = require(path.join(__dirname, 'utils', 'schedule'));
 scheduledFunctions.initScheduledJobs(app.locals.client);
 
@@ -45,6 +42,8 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
+app.use('/chart', express.static(path.join(__dirname, 'public/chart'), { index: ['index.json'], extensions: ['json'] }));
+app.use('/img', express.static(path.join(__dirname, 'public/img'), { index: ['index.png'], extensions: ['png'] }));
 
 app.use('/', indexRouter);
 app.use('/api', apiRouter);

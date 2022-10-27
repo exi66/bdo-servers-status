@@ -1,33 +1,32 @@
-document.addEventListener('DOMContentLoaded', function(event) {
-  let localPath = window.location.pathname.toString().split('/');
-  var path = `/chart/${localPath[2]}/${localPath[3]}/index.json`;
-  var current_month = `${localPath[2]}-${('0' + localPath[3]).slice(-2)}`;
+document.addEventListener('DOMContentLoaded', async function() {
+  let localPath = this.getElementById('chart').getAttribute('data-params');
+  var path = '/chart/'+localPath;
+  var current_month = `${localPath.split('/')[0]}-${('0' + localPath.split('/')[1]).slice(-2)}`;
   var chart = createMonthChart('chart');
-  var datasets = getDatasets(path, );
-  var dates = getData('/api/stats');
-  var selected = $('#select_data').find(':selected').val();
+  var datasets = await getDatasets(path);
+  var dates = await getData('/api/stats');
+  var selected = this.getElementById('select_data').value;
   if (!dates || !datasets) return;
-  dates.sort(function(x, y) {
-    let date1 = new Date(x).getTime();
-    let date2 = new Date(y).getTime();
-    if (date1 < date2) return -1;
-    if (date1 > date2) return 1;
-    return 0;
-  });
+
   let min_date = dates[0].split('-');
   let max_date = dates.slice(-1).toString().split('-');
-  $('#pick_date').attr('min', `${min_date[0]}-${min_date[1]}`);
-  $('#pick_date').attr('max', `${max_date[0]}-${max_date[1]}`);
-  $('#pick_date').attr('value', current_month);
+  let date_picker = this.getElementById('pick_date');
+  date_picker.setAttribute('min', `${min_date[0]}-${min_date[1]}`);
+  date_picker.setAttribute('max', `${max_date[0]}-${max_date[1]}`);
+  date_picker.setAttribute('value', current_month);
 
-  $('#navigate_to_date').click(function() {
-    let date = $('#pick_date').val();
-    if (date) {
-      let __date = new Date(date+'-01');
-      if (confirm(`Вы хотите посмотреть подробную статистику за ${date.split('-')[1]} месяц ${date.split('-')[0]} года?`))
+  updateChart();
+
+  date_picker.addEventListener('change', function() {
+    let __date = new Date(this.value+'-01');
+    if (confirm(`Вы хотите посмотреть подробную статистику за ${this.value.split('-')[1]} месяц ${this.value.split('-')[0]} года?`))
         window.location.href = `/stats/${__date.getFullYear()}/${__date.getMonth() + 1}`;
-    }
   });
+  this.getElementById('select_data')
+    .addEventListener('change', function() {
+      selected = this.value;
+      updateChart();
+    });
   chart.canvas.onclick = function (evt) {
     var points = chart.getElementsAtEventForMode(evt, 'nearest', { intersect: true }, true);
     if (points[0]) {
@@ -38,11 +37,6 @@ document.addEventListener('DOMContentLoaded', function(event) {
         window.location.href = `/stats/${value.x.getFullYear()}/${value.x.getMonth() + 1}/${value.x.getDate()}`;
     }
   };
-  updateChart();
-  $('#select_data').on('change', function (e) {
-    selected = this.value;
-    updateChart();
-  });
   function updateChart() {
     if (!datasets || !chart) return;
     let conf = datasets.find(e => e.name == selected);

@@ -19,7 +19,8 @@ const chartJSNodeCanvas = new ChartJSNodeCanvas({
 chartJSNodeCanvas.registerFont(path.join(__dirname, '..', 'public', 'fonts', 'arial.ttf'), { family: 'Arial' });
 
 const render = async function render(jsonPath, imgPath, day = true) {
-  if (!fs.existsSync(jsonPath)) return console.log(`[${new Date().toLocaleString()}] file ${jsonPath} not exists. Try another.`);
+  if (!fs.existsSync(jsonPath)) 
+    return console.log(`[${new Date().toLocaleString()}] file ${jsonPath} not exists. Try another.`);
 
   var file = fs.readFileSync(jsonPath);
   var json = JSON.parse(file).filter(e => e);

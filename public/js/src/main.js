@@ -1,8 +1,8 @@
 Chart.defaults.font.family = 'Arial';
 
-const getDatasets = function getDatasets(url) {
-  let json = getData(url);
-  if (json.error) return console.error(json.error);
+const getDatasets = async function getDatasets(url) {
+  let json = await getData(url);
+  if (!json) return;
   json = json.filter(e => e);
   let datasets = createDatasets();
   for (let dataset of datasets) {
@@ -17,21 +17,14 @@ const createDatasets = function createDatasets() {
     { name: 'm1', label: 'Медия-1', data: [] }, { name: 'kam1', label: 'Камасильвия-1', data: [] },
   ]
 }
-const getData = function getData(url, method = 'GET', async = false, cache = false) {
-  let res;
-  $.ajax({
-    type: method,
-    url: url,
-    async: async,
-    cache: cache,
-    success: function(result) {
-      res = result;
-    },
-    error: function (error) {
-      console.error({ error: error });
-    }
-  });
-  return res;
+const getData = async function getData(url) {
+  try {
+    let response = await fetch(url);
+    let data = await response.json();
+    return data;
+  } catch(e) {
+    return console.error({ error: e });
+  }
 }
 const updateData = function updateData(chart, conf) {
   chart.data.datasets[0].label = conf.label;

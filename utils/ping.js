@@ -42,7 +42,6 @@ const util = require('util');
 const fs = require('fs-extra');
 const tcpPing = util.promisify(tcpp.ping);
 
-const hosts = require(path.join(__dirname, '..', 'storage', 'servers.json'));
 const savePath = path.join(__dirname, '..', 'public', 'chart');
 
 const default_timeout = 5*60*1000;
@@ -64,7 +63,7 @@ async function start(client) {
     let maintenanceStatus = { time: new Date().getTime(), maintenance: true };
     saveData(maintenanceStatus);
   } else {
-    let r = await pingGameServices(hosts);
+    let r = await pingGameServices(client.servers);
     console.log(`[${new Date().toLocaleString()}][ping] someDown: ${r.someDown}`);
 
     saveData(r.localStatus);

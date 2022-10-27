@@ -77,7 +77,7 @@ const createMonthChart = function createMonthChart(id) {
           type: 'time',
           time: {
             displayFormats: { hour: 'HH:mm' },
-            tooltipFormat: 'dd.MM.yyyy',
+            tooltipFormat: 'DD.MM.yyyy',
             unit: 'day',
             round: 'day'
           },

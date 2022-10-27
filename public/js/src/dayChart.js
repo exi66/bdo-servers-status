@@ -78,7 +78,7 @@ const createDayChart = function createDayChart(id) {
           type: 'time',
           time: {
             displayFormats: { hour: 'HH:mm' },
-            tooltipFormat: 'dd.MM.yyyy, HH:mm',
+            tooltipFormat: 'DD.MM.yyyy, HH:mm',
             unit: 'hour',
             round: 'minute'
           },

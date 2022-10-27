@@ -12,18 +12,6 @@ router.get('/status', function (req, res, next) {
   return next(err);
 });
 
-/* 
-* disable because now site require recaptcha
-*
-router.get('/news', function (req, res, next) {
-  let client = req.app.locals.client;
-  if (!client.maintenance) return res.json(client.news);
-  let err = new Error('Maintenance');
-  err.status = 503;
-  return next(err);
-});
-*/
-
 router.get('/stats', function (req, res, next) {
   let directory = path.join(__dirname, '..', 'public', 'chart');
   let dates = [];
@@ -35,6 +23,13 @@ router.get('/stats', function (req, res, next) {
         dates.push(`${year}-${('0' + month).slice(-2)}-${('0' + day.replace('.json', '')).slice(-2)}`);
       }
     });
+  });
+  dates.sort(function(x, y) {
+    let date1 = new Date(x).getTime();
+    let date2 = new Date(y).getTime();
+    if (date1 < date2) return -1;
+    if (date1 > date2) return 1;
+    return 0;
   });
   return res.json(dates);
 });
